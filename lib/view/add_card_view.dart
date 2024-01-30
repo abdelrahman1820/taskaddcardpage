@@ -10,6 +10,6 @@ class AddCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (BuildContext context) => MangeaddcardcubitCubit(),
-        child: const AddcardViewBody());
+        child: const AddCardViewBody());
   }
 }
