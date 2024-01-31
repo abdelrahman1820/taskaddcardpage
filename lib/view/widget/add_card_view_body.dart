@@ -1,4 +1,5 @@
 import 'package:addcardpage/cubits/mangeaddcardcubit/mangeaddcardcubit_cubit.dart';
+import 'package:addcardpage/cubits/validationcubit/validation_cubit.dart';
 import 'package:addcardpage/helper/input_formater.dart';
 import 'package:addcardpage/view/widget/custom_add_card_button.dart';
 import 'package:addcardpage/view/widget/custom_input_text_feild.dart';
@@ -21,6 +22,15 @@ class AddcardViewBody extends StatelessWidget {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     void updateContainerColor(BuildContext context) {
       BlocProvider.of<MangeaddcardcubitCubit>(context).updateContainerColor(
+        name: nameController.text,
+        cardNumber: cardNumberController.text,
+        expiry: expiryController.text,
+        cvv: cvvController.text,
+      );
+    }
+
+    void ValidtionIconFun(BuildContext context) {
+      BlocProvider.of<ValidationCubit>(context).validateFields(
         name: nameController.text,
         cardNumber: cardNumberController.text,
         expiry: expiryController.text,
@@ -59,52 +69,76 @@ class AddcardViewBody extends StatelessWidget {
           key: formKey,
           child: Column(
             children: [
-              CustomInputTextfeild(
-                controller: nameController,
-                onChanged: (value) {
-                  updateContainerColor(context);
+              BlocBuilder<ValidationCubit, ValidationState>(
+                builder: (context, state) {
+                  return CustomInputTextfeild(
+                    showIcon: state.isNameValid,
+                    controller: nameController,
+                    onChanged: (value) {
+                      updateContainerColor(context);
+                      ValidtionIconFun(context);
+                    },
+                    keyboardType: TextInputType.name,
+                    title: 'Card name',
+                    hint: 'Enter your card name',
+                  );
                 },
-                keyboardType: TextInputType.name,
-                title: 'Card name',
-                hint: 'Enter your card name',
               ),
-              CustomInputTextfeild(
-                controller: cardNumberController,
-                onChanged: (value) {
-                  updateContainerColor(context);
+              BlocBuilder<ValidationCubit, ValidationState>(
+                builder: (context, state) {
+                  return CustomInputTextfeild(
+                    showIcon: state.isCardNumberValid,
+                    controller: cardNumberController,
+                    onChanged: (value) {
+                      updateContainerColor(context);
+                      ValidtionIconFun(context);
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(16),
+                      GenericFormatter(digits: [4, 8, 12], spliter: "  "),
+                    ],
+                    title: 'Card Number',
+                    hint: 'Enter your card number',
+                  );
                 },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(16),
-                  GenericFormatter(digits: [4, 8, 12], spliter: "  "),
-                ],
-                title: 'Card Number',
-                hint: 'Enter your card number',
               ),
-              CustomInputTextfeild(
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                  GenericFormatter(digits: [2], spliter: "/")
-                ],
-                controller: expiryController,
-                onChanged: (value) {
-                  updateContainerColor(context);
+              BlocBuilder<ValidationCubit, ValidationState>(
+                builder: (context, state) {
+                  return CustomInputTextfeild(
+                    showIcon: state.isExpiryValid,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                      GenericFormatter(digits: [2], spliter: "/")
+                    ],
+                    controller: expiryController,
+                    onChanged: (value) {
+                      updateContainerColor(context);
+                      ValidtionIconFun(context);
+                    },
+                    title: 'Expired',
+                    hint: 'MM/YY',
+                  );
                 },
-                title: 'Expired',
-                hint: 'MM/YY',
               ),
-              CustomInputTextfeild(
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(3)
-                ],
-                controller: cvvController,
-                onChanged: (value) {
-                  updateContainerColor(context);
+              BlocBuilder<ValidationCubit, ValidationState>(
+                builder: (context, state) {
+                  return CustomInputTextfeild(
+                    showIcon: state.isCvvValid,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3)
+                    ],
+                    controller: cvvController,
+                    onChanged: (value) {
+                      updateContainerColor(context);
+                      ValidtionIconFun(context);
+                    },
+                    title: 'CVV',
+                    hint: 'Enter your card cvv',
+                  );
                 },
-                title: 'CVV',
-                hint: 'Enter your card cvv',
               ),
               const CustomswipeButton(),
               BlocBuilder<MangeaddcardcubitCubit, MangeaddcardcubitState>(

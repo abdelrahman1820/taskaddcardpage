@@ -9,12 +9,3 @@ final class Mangeaddcardcubitfill extends MangeaddcardcubitState {}
 
 final class Mangeaddcardcubitunfill extends MangeaddcardcubitState {}
 
-final class IconTrueState extends MangeaddcardcubitState {
-  IconTrueState({required this.ishow});
-  final bool ishow;
-}
-
-final class IconFalseState extends MangeaddcardcubitState {
-  IconFalseState({required this.isShow});
-  final bool isShow;
-}

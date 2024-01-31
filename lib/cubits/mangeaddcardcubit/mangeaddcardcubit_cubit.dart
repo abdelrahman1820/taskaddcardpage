@@ -20,15 +20,5 @@ class MangeaddcardcubitCubit extends Cubit<MangeaddcardcubitState> {
     }
   }
 
-   showIconfun({
-    required TextEditingController controler,
-  }) {
-    if (controler.text.isNotEmpty) {
-      emit(IconTrueState(ishow: true));
-      
-    } else {
-      emit(IconFalseState(isShow: false));
-      
-    }
-  }
+ 
 }
